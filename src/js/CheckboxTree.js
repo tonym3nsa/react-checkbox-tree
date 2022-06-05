@@ -86,9 +86,12 @@ class CheckboxTree extends React.Component {
 
     constructor(props) {
         super(props);
-        console.log('test');
+console.log('.....')
         const model = new NodeModel(props);
+
         model.flattenNodes(props.nodes);
+
+
         model.deserializeLists({
             checked: props.checked,
             expanded: props.expanded,
@@ -140,7 +143,6 @@ class CheckboxTree extends React.Component {
         const { checkModel, noCascade, onCheck } = this.props;
         const model = this.state.model.clone();
         const node = model.getNode(nodeInfo.value);
-
         model.toggleChecked(nodeInfo, nodeInfo.checked, checkModel, noCascade);
         onCheck(model.serializeList('checked'), { ...node, ...nodeInfo });
     }
@@ -182,7 +184,6 @@ class CheckboxTree extends React.Component {
 
     determineShallowCheckState(node, noCascade) {
         const flatNode = this.state.model.getNode(node.value);
-
         if (flatNode.isLeaf || noCascade) {
             return flatNode.checked ? 1 : 0;
         }
@@ -225,12 +226,10 @@ class CheckboxTree extends React.Component {
         } = this.props;
         const { id, model } = this.state;
         const { icons: defaultIcons } = CheckboxTree.defaultProps;
-
         const treeNodes = nodes.map((node) => {
             const key = node.value;
             const flatNode = model.getNode(node.value);
             const children = flatNode.isParent ? this.renderTreeNodes(node.children, node) : null;
-
             // Determine the check state after all children check states have been determined
             // This is done during rendering as to avoid an additional loop during the
             // deserialization of the `checked` property
@@ -241,7 +240,6 @@ class CheckboxTree extends React.Component {
 
             // Render only if parent is expanded or if there is no root parent
             const parentExpanded = parent.value ? model.getNode(parent.value).expanded : true;
-
             if (!parentExpanded) {
                 return null;
             }
@@ -312,7 +310,6 @@ class CheckboxTree extends React.Component {
 
     renderHiddenInput() {
         const { name, nameAsArray } = this.props;
-
         if (name === undefined) {
             return null;
         }

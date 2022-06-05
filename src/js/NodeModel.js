@@ -86,6 +86,7 @@ class NodeModel {
 
     deserializeLists(lists) {
         const listKeys = ['checked', 'expanded'];
+        // console.log('before', this.flatNodes);
 
         // Reset values to false
         Object.keys(this.flatNodes).forEach((value) => {
@@ -93,6 +94,7 @@ class NodeModel {
                 this.flatNodes[value][listKey] = false;
             });
         });
+        // console.log('after', this.flatNodes);
 
         // Deserialize values and set their nodes to true
         listKeys.forEach((listKey) => {
@@ -102,16 +104,17 @@ class NodeModel {
                 }
             });
         });
+        // console.log('after', this.flatNodes);
     }
 
     serializeList(key) {
         const list = [];
-
         Object.keys(this.flatNodes).forEach((value) => {
             if (this.flatNodes[value][key]) {
                 list.push(value);
             }
         });
+        // console.log('serializeList..', list)
 
         return list;
     }
@@ -127,10 +130,12 @@ class NodeModel {
     }
 
     toggleChecked(node, isChecked, checkModel, noCascade, percolateUpward = true) {
+        // console.log('toggleChecked');
         const flatNode = this.flatNodes[node.value];
         const modelHasParents = [CheckModel.PARENT, CheckModel.ALL].indexOf(checkModel) > -1;
         const modelHasLeaves = [CheckModel.LEAF, CheckModel.ALL].indexOf(checkModel) > -1;
-
+        console.log('CheckModel.Parent', CheckModel.PARENT, 'CheckModel.Leaf', CheckModel.LEAF)
+        console.log('europa', flatNode);
         if (flatNode.isLeaf || noCascade) {
             if (node.disabled) {
                 return this;
@@ -145,6 +150,7 @@ class NodeModel {
             if (modelHasLeaves) {
                 // Percolate check status down to all children
                 flatNode.children.forEach((child) => {
+                  // console.log('>>>>>>>')
                     this.toggleChecked(child, isChecked, checkModel, noCascade, false);
                 });
             }
@@ -162,9 +168,9 @@ class NodeModel {
 
     toggleParentStatus(node, checkModel) {
         const flatNode = this.flatNodes[node.value];
-
         if (flatNode.isChild) {
             if (checkModel === CheckModel.ALL) {
+              // console.log('here', checkModel)
                 this.toggleNode(node.value, 'checked', this.isEveryChildChecked(flatNode));
             }
 
